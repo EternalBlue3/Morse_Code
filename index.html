@@ -40,51 +40,63 @@
             }).join(' ');
          }
          
-         function playSound(audio) {
-            return new Promise(resolve => {
-               audio.addEventListener('ended', () => {
-                  resolve();
-               });
-               audio.play();
-            });
-         }
-         
          async function playMorseSound(morse) {
             morse = morse.replace(/&nbsp/g," ");
+            const synth = new Tone.Synth({
+               oscillator: {
+                  type: 'sine'
+               },
+               envelope: {
+                  attack: 0.1,
+                  decay: 0.2,
+                  sustain: 0.1,
+                  release: 0.5
+               }
+            });
+            const notes = {
+               '.': 'C4',
+               '-': 'E4'
+            }
             
-            for (const x of morse) {
-               if (x !== ' ') {
-                  if (x === '.') {
-                     await playSound(dot);
-                  } else {
-                     await playSound(dash);
-                  }
-               } else {
-                  await new Promise(resolve => setTimeout(resolve, 200));
+            const timeunit = 150;
+            const noteLength = timeunit * 0.9;
+            const dotLength = timeunit * 1;
+            const dashLength = timeunit * 3;
+            const gapLength = timeunit;
+            const wordGapLength = timeunit * 7;
+        
+            for (let i = 0; i < morse.length; i++) {
+               const c = morse.charAt(i);
+               if (c == '.') {
+                  synth.triggerAttackRelease(notes['.'], dotLength / 1000);
+                  await sleep(noteLength);
+               } else if (c == '-') {
+                  synth.triggerAttackRelease(notes['-'], dashLength / 1000);
+                  await sleep(noteLength);
+               } else if (c == ' ') {
+                  await sleep(gapLength);
+               } else if (c == '&') {
+                  await sleep(wordGapLength);
                }
             }
          }
-         
-         function main() {
-            message = inputarea.value;
-         
-            if (methodbutton.innerHTML == "Encode"){
-               morsecode = textToMorse(message);
-               translated.innerHTML = morsecode;
-            } else {                    // Decode
-               morsecode = "";
-               translated.innerHTML = morseToText(message);
-            }
-         }
-         
-         // Preload audio
-         const dot = new Audio('dot.wav');
-         dot.preload = 'auto';
-         const dash = new Audio('dash.wav');
-         dash.preload = 'auto';
-         
-         translationbutton.addEventListener('click',main);
-         playsoundbutton.addEventListener('click',function(){playMorseSound(morsecode)});
+     
+        function sleep(ms) {
+           return new Promise(resolve => setTimeout(resolve, ms));
+        }
+     
+        translationbutton.addEventListener('click', function() {
+           if (methodbutton.innerHTML == "Encode") {
+              morsecode = textToMorse(inputarea.value);
+           } else {
+              morsecode = morseToText(inputarea.value);
+           }
+           output.innerHTML = morsecode;
+        });
+     
+        playsoundbutton.addEventListener('click', async function() {
+           await playMorseSound(morsecode);
+        });
       </script>
    </body>
 </html>
