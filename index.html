@@ -58,10 +58,10 @@
                if (x !== ' ') {
                   if (x === '.') {
                      await playSound(dot);
-                     await new Promise(resolve => setTimeout(resolve, 50));
+                     await new Promise(resolve => setTimeout(resolve, 25));
                   } else {
                      await playSound(dash);
-                     await new Promise(resolve => setTimeout(resolve, 100));
+                     await new Promise(resolve => setTimeout(resolve, 25));
                   }
                } else {
                   await new Promise(resolve => setTimeout(resolve, 200));
