@@ -19,9 +19,9 @@ def output_sound(path, freq, dur, framerate):
     frames = b''.join(sine_samples(freq,dur, framerate))
     output_wave(path, frames, framerate)
 
-framerate = 70000 # framerate
+framerate = 60000 # framerate
 beep_freq = 550 # Hz
-beep_duration = 0.1 # seconds
+beep_duration = 0.05 # seconds
 
 output_sound('dot.wav', beep_freq, beep_duration, framerate)
 output_sound('dash.wav', beep_freq, beep_duration*3, framerate)
