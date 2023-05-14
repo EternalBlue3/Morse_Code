@@ -74,11 +74,11 @@
                 message = inputarea.value;
                 
                 if (methodbutton.innerHTML == "Encode"){
-                    var morsecode = textToMorse(message);
+                    morsecode = textToMorse(message);
 		    console.log(morsecode);
                     translated.innerHTML = morsecode;
                 } else {                    // Decode
-                    var morsecode = "";
+                    morsecode = "";
 		    console.log(morsecode)
                     translated.innerHTML = morseToText(message);
                 }
