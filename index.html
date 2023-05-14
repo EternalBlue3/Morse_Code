@@ -49,9 +49,6 @@
          }
          
          async function playMorseSound(morse) {
-            const dot = new Audio('dot.wav');
-            const dash = new Audio('dash.wav');
-            
             morse = morse.replace(/&nbsp/g," ");
             
             for (const x of morse) {
@@ -78,6 +75,12 @@
                translated.innerHTML = morseToText(message);
             }
          }
+         
+         // Preload audio
+         const dot = new Audio('dot.wav');
+         dot.preload = 'auto';
+         const dash = new Audio('dash.wav');
+         dash.preload = 'auto';
          
          translationbutton.addEventListener('click',main);
          playsoundbutton.addEventListener('click',function(){playMorseSound(morsecode)});
