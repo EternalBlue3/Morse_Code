@@ -42,30 +42,35 @@
                 }).join(' ');
             }
 
-            function sleep(ms) {
-		  return new Promise(resolve => setTimeout(resolve, ms));
-	    }
+            function playSound(audio) {
+  return new Promise(resolve => {
+    audio.addEventListener('ended', () => {
+      resolve();
+    });
+    audio.play();
+  });
+}
 
-	    async function playMorseSound(morse) {
-                const dot = new Audio('dot.wav');
-		const dash = new Audio('dash.wav');
+async function playMorseSound(morse) {
+  const dot = new Audio('dot.wav');
+  const dash = new Audio('dash.wav');
 
-		morse = morse.replace(/&nbsp/g," ");
+  morse = morse.replace(/&nbsp/g," ");
 
-		for (const x of morse) {
-		    if (x !== ' ') {
-		        if (x === '.') {
-			    dot.play();
-			    await sleep(500);
-			} else {
-			    dash.play();
-			    await sleep(700);
-			}
-		    } else {
-			await sleep(500);
-		    }
-		}
-	    }
+  for (const x of morse) {
+    if (x !== ' ') {
+      if (x === '.') {
+        await playSound(dot);
+        await new Promise(resolve => setTimeout(resolve, 200));
+      } else {
+        await playSound(dash);
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+    } else {
+      await new Promise(resolve => setTimeout(resolve, 200));
+    }
+  }
+}
             
             function main() {
                 message = inputarea.value;
