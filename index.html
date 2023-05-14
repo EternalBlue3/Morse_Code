@@ -46,14 +46,19 @@
 		console.log(morse);
                 const dot = new Audio('dot.wav');
                 const dash = new Audio('dash.wav');
+		var currentdelay = 0;
+		
                 for (const x of morse) {
                     if (x !== '&nbsp') {
                         if (x === '.') {
-                            dot.play();
+			    currentdelay += 200;
+			    setTimeout(function(){dot.play()},currentdelay);
                         } else {
-                            dash.play();
+			    currentdelay += 400;
+                            setTimeout(function(){dash.play()},currentdelay);
                         }
                     } else {
+                        currentdelay += 200;
                     }
                 }
             }
