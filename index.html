@@ -7,9 +7,15 @@
 	<body>
 		<h1>Morse Code Translator</h1>
 		<input id="inputarea" type="text"><button id="method">Encode</button>
+        <button id="translate">Translate</button>
+        <br>
+        <p id="translated"></p>
         
         <script>
             var methodbutton = document.getElementById("method");
+            var translationbutton = document.getElementById("translate");
+            var inputarea = document.getElementById("inputarea");
+            var output = document.getElementById("translated");
             
             methodbutton.addEventListener('click',function() {
                 if (methodbutton.innerHTML == "Encode"){
@@ -18,6 +24,60 @@
                     methodbutton.innerHTML = "Encode";
                 }
             });
+            // Morse Code Translation
+            
+            const charToMorse = {'!':"-.-.--",'"':".-..-.",'$':"...-..-",'&':".-...","'":".----.",'(':"-.--.",')':"-.--.-",'+':".-.-.",',':"--..--",'-':"-....-",'.':".-.-.-",'/':"-..-.",'0':"-----",'1':".----",'2':"..---",'3':"...--",'4':"....-",'5':".....",'6':"-....",'7':"--...",'8':"---..",'9':"----.",':':"---...",';':"-.-.-.",'=':"-...-",'?':"..--..",'@':".--.-.",'_':"..--.-",'A':".-",'B':"-...",'C':"-.-.",'D':"-..",'E':".",'F':"..-.",'G':"--.",'H':"....",'I':"..",'J':".---",'K':"-.-",'L':".-..",'M':"--",'N':"-.",'O':"---",'P':".--.",'Q':"--.-",'R':".-.",'S':"...",'T':"-",'U':"..-",'V':"...-",'W':".--",'X':"-..-",'Y':"-.--",'Z':"--.."};
+        	const morseToChar = Object.fromEntries(Object.entries(charToMorse).map(([k, v]) => [v, k]));
+
+            function textToMorse(msg) {
+                const out = [...msg.toUpperCase()].map(x => charToMorse[x] || '');
+                return out.join(' ');
+            }
+
+            function morseToText(morse) {
+                return morse.split('  ').map(word => {
+                    return word.split(' ').map(code => morseToChar[code] || '').join('');
+                }).join(' ');
+            }
+
+            function playMorseSound(morse) {
+                const dot = new Audio('dot.wav');
+                const dash = new Audio('dash.wav');
+                for (const x of morse) {
+                    if (x !== ' ') {
+                        if (x === '.') {
+                            dot.play();
+                            setTimeout(() => {
+                                dot.pause();
+                            }, 200);
+                        } else {
+                            dash.play();
+                            setTimeout(() => {
+                                dash.pause();
+                            }, 400);
+                        }
+                    } else {
+                        setTimeout(() => {
+                            null;
+                        }, 200);
+                    }
+                }
+                setTimeout(() => {
+                    null;
+                }, 200);
+            }
+            
+            function main() {
+                message = inputarea.value;
+                
+                if (methodbutton.innerHTML == "Encode"){
+                    translated.innerHTML = textToMorse(message);
+                } else {                    // Decode
+                    translated.innerHTML = morseToText(message);
+                }
+            }
+            
+            translationbutton.addEventListener('click',main);
         </script>
 	</body>
 </html>
