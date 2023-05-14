@@ -7,15 +7,17 @@
 	<body>
 		<h1>Morse Code Translator</h1>
 		<input id="inputarea" type="text"><button id="method">Encode</button>
-        <button id="translate">Translate</button>
+        <button id="translate">Translate</button><button id="playsound">Play Sound</button>
         <br>
         <p id="translated"></p>
         
         <script>
             var methodbutton = document.getElementById("method");
             var translationbutton = document.getElementById("translate");
+            var playsoundbutton = document.getElementById("playsound");
             var inputarea = document.getElementById("inputarea");
             var output = document.getElementById("translated");
+            var morsecode = "";
             
             methodbutton.addEventListener('click',function() {
                 if (methodbutton.innerHTML == "Encode"){
@@ -72,13 +74,16 @@
                 message = inputarea.value;
                 
                 if (methodbutton.innerHTML == "Encode"){
-                    translated.innerHTML = textToMorse(message);
+                    var morsecode = textToMorse(message);
+                    translated.innerHTML = morsecode;
                 } else {                    // Decode
+                    var morsecode = "";
                     translated.innerHTML = morseToText(message);
                 }
             }
             
             translationbutton.addEventListener('click',main);
+            playsoundbutton.addEventListener('click',function(){playsound(morsecode)});
         </script>
 	</body>
 </html>
