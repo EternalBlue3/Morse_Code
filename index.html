@@ -31,7 +31,8 @@
 
             function textToMorse(msg) {
                 const out = [...msg.toUpperCase()].map(x => charToMorse[x] || '');
-                return out.join(' ');
+                console.log(out.join('&nbsp'));
+                return out.join('&nbsp');
             }
 
             function morseToText(morse) {
