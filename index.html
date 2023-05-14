@@ -47,27 +47,15 @@
                 const dot = new Audio('dot.wav');
                 const dash = new Audio('dash.wav');
                 for (const x of morse) {
-                    if (x !== ' ') {
+                    if (x !== '&nbsp') {
                         if (x === '.') {
                             dot.play();
-                            setTimeout(() => {
-                                dot.pause();
-                            }, 200);
                         } else {
                             dash.play();
-                            setTimeout(() => {
-                                dash.pause();
-                            }, 400);
                         }
                     } else {
-                        setTimeout(() => {
-                            null;
-                        }, 200);
                     }
                 }
-                setTimeout(() => {
-                    null;
-                }, 200);
             }
             
             function main() {
