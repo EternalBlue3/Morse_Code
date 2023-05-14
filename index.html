@@ -44,6 +44,7 @@
             }
 
             function playMorseSound(morse) {
+		console.log(morse);
                 const dot = new Audio('dot.wav');
                 const dash = new Audio('dash.wav');
                 for (const x of morse) {
@@ -83,7 +84,7 @@
             }
             
             translationbutton.addEventListener('click',main);
-            playsoundbutton.addEventListener('click',function(){playsound(morsecode)});
+            playsoundbutton.addEventListener('click',function(){playMorseSound(morsecode)});
         </script>
 	</body>
 </html>
