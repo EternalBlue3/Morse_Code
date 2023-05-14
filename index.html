@@ -42,26 +42,30 @@
                 }).join(' ');
             }
 
-            function playMorseSound(morse) {
-		console.log(morse);
+            function sleep(ms) {
+		  return new Promise(resolve => setTimeout(resolve, ms));
+	    }
+
+	    async function playMorseSound(morse) {
                 const dot = new Audio('dot.wav');
-                const dash = new Audio('dash.wav');
-		var currentdelay = 0;
-		
-                for (const x of morse) {
-                    if (x !== '&nbsp') {
-                        if (x === '.') {
-			    currentdelay += 200;
-			    setTimeout(function(){dot.play()},currentdelay);
-                        } else {
-			    currentdelay += 400;
-                            setTimeout(function(){dash.play()},currentdelay);
-                        }
-                    } else {
-                        currentdelay += 200;
-                    }
-                }
-            }
+		const dash = new Audio('dash.wav');
+
+		morse = morse.replace(/&nbsp/g," ");
+
+		for (const x of morse) {
+		    if (x !== ' ') {
+		        if (x === '.') {
+			    dot.play();
+			    await sleep(500);
+			} else {
+			    dash.play();
+			    await sleep(1500);
+			}
+		    } else {
+			await sleep(500);
+		    }
+		}
+	    }
             
             function main() {
                 message = inputarea.value;
