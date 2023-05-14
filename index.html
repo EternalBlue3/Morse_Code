@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Morse Code Translator</title>
-</head>
-<body>
-
-<h1>Placeholder</h1>
-
-</body>
+	<head>
+		<title>Morse Code Translator</title>
+	</head>
+    
+	<body>
+		<h1>Morse Code Translator</h1>
+		<input id="inputarea" type="text"><button id="method">Encode</button>
+        
+        <script>
+            var methodbutton = document.getElementById("method");
+            
+            methodbutton.addEventListener('click',function() {
+                if (methodbutton.innerHTML == "Encode"){
+                    methodbutton.innerHTML = "Decode";
+                } else {
+                    methodbutton.innerHTML = "Encode";
+                }
+            });
+        </script>
+	</body>
 </html>
