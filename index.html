@@ -40,45 +40,56 @@
             }).join(' ');
          }
          
-         async function playMorseSound(morse) {
-            morse = morse.replace(/&nbsp/g," ");
-            const synth = new Tone.Synth({
-               oscillator: {
-                  type: 'sine'
-               },
-               envelope: {
-                  attack: 0.1,
-                  decay: 0.2,
-                  sustain: 0.1,
-                  release: 0.5
+         // The Morse Code tone to use, 550Hz sine wave
+         var osc = new Tone.Oscillator({
+           "frequency": 550,
+           "volume": -20 // set initial volume to -20 dB to avoid clipping
+         }).toMaster();
+
+         var tone_dit = function (time, char) {
+           osc.volume.value = 0; // mute oscillator before starting
+           osc.start(time);
+           osc.volume.rampTo(0, 0.01); // ramp up volume to avoid popping/clicking
+           osc.stop(time + dot_time);
+         }
+         var tone_dah = function (time, char) {
+           osc.volume.value = 0;
+           osc.start(time);
+           osc.volume.rampTo(0, 0.01);
+           osc.stop(time + dash_time);
+         }
+
+         function playMorseSound(morse) {
+           morse = morse.replace(/&nbsp/g, " ");
+
+           // All times in seconds
+           var dot_time = 0.050;
+           var dash_time = dot_time * 3;
+           var inter_elem_time = dot_time;
+           var space_time = dot_time * 7;
+
+           // start the oscillator and schedule the notes
+           osc.start();
+
+           // schedule the notes for each character in the Morse code string
+           var time = Tone.now();
+           for (const x of morse) {
+             if (x !== ' ') {
+               if (x === '.') {
+                 tone_dit(time, x);
+               } else {
+                 tone_dah(time, x);
                }
-            });
-            const notes = {
-               '.': 'C4',
-               '-': 'E4'
-            }
-            
-            const timeunit = 150;
-            const noteLength = timeunit * 0.9;
-            const dotLength = timeunit * 1;
-            const dashLength = timeunit * 3;
-            const gapLength = timeunit;
-            const wordGapLength = timeunit * 7;
-        
-            for (let i = 0; i < morse.length; i++) {
-               const c = morse.charAt(i);
-               if (c == '.') {
-                  synth.triggerAttackRelease(notes['.'], dotLength / 1000);
-                  await sleep(noteLength);
-               } else if (c == '-') {
-                  synth.triggerAttackRelease(notes['-'], dashLength / 1000);
-                  await sleep(noteLength);
-               } else if (c == ' ') {
-                  await sleep(gapLength);
-               } else if (c == '&') {
-                  await sleep(wordGapLength);
-               }
-            }
+               time += inter_elem_time;
+             } else {
+               time += space_time;
+             }
+           }
+
+           // stop the oscillator after the last note is played
+           setTimeout(function () {
+             osc.stop();
+           }, time * 1000); // convert time to milliseconds
          }
      
         function sleep(ms) {
@@ -94,9 +105,7 @@
            output.innerHTML = morsecode;
         });
      
-        playsoundbutton.addEventListener('click', async function() {
-           await playMorseSound(morsecode);
-        });
+        playsoundbutton.addEventListener('click', function() {playMorseSound(morsecode)});
       </script>
    </body>
 </html>
