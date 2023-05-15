@@ -46,16 +46,12 @@
            "volume": -20 // set initial volume to -20 dB to avoid clipping
          }).toMaster();
 
-         var tone_dit = function (time, char) {
-           osc.volume.value = 0; // mute oscillator before starting
+         var tone_dit = function(time, char) {
            osc.start(time);
-           osc.volume.rampTo(0, 0.01); // ramp up volume to avoid popping/clicking
            osc.stop(time + dot_time);
          }
-         var tone_dah = function (time, char) {
-           osc.volume.value = 0;
+         var tone_dah = function(time, char) {
            osc.start(time);
-           osc.volume.rampTo(0, 0.01);
            osc.stop(time + dash_time);
          }
 
@@ -68,23 +64,22 @@
            var inter_elem_time = dot_time;
            var space_time = dot_time * 7;
 
-           // start the oscillator and schedule the notes
-           osc.start();
-
            // schedule the notes for each character in the Morse code string
-           var time = Tone.now();
-           for (const x of morse) {
-             if (x !== ' ') {
-               if (x === '.') {
-                 tone_dit(time, x);
-               } else {
-                 tone_dah(time, x);
-               }
-               time += inter_elem_time;
-             } else {
-               time += space_time;
-             }
-           }
+           var t = Tone.now();
+              for (const x of morse) {
+                if (x !== ' ') {
+                  if (x === '.') {
+                    tone_dit(t, x);
+                    t += dot_time + inter_elem_time;
+                  } else {
+                    tone_dah(t, x);
+                    t += dash_time + inter_elem_time;
+                  }
+                } else {
+                  t += space_time;
+                }
+              }
+            }
 
            // stop the oscillator after the last note is played
            setTimeout(function () {
