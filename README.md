@@ -5,5 +5,4 @@ Just a simple program that takes an input, converts it to morse code, outputs th
 In the Python folder are two programs. One I used to generate the dot and dash sounds, the other one can be used to take an input, convert it to morse, and play the corresponding sound.
 
 Todo:
-- Add a "play sound" feature to the Morse Code github.io page
-- Style the page with css
+- Style github.io page with css
