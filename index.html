@@ -88,10 +88,11 @@
         translationbutton.addEventListener('click', function() {
            if (methodbutton.innerHTML == "Encode") {
               morsecode = textToMorse(inputarea.value);
+              output.innerHTML = morsecode;
            } else {
-              morsecode = morseToText(inputarea.value);
+              morsecode = '';
+              output.innerHTML = morseToText(inputarea.value);
            }
-           output.innerHTML = morsecode;
         });
      
         playsoundbutton.addEventListener('click', function() {playMorseSound(morsecode)});
