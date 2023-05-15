@@ -40,6 +40,12 @@
             }).join(' ');
          }
          
+         // All times in seconds
+         var dot_time = 0.050;
+         var dash_time = dot_time * 3;
+         var inter_elem_time = dot_time;
+         var space_time = dot_time * 7;
+         
          // The Morse Code tone to use, 550Hz sine wave
          var osc = new Tone.Oscillator({
            "frequency": 550,
@@ -57,12 +63,6 @@
 
          function playMorseSound(morse) {
            morse = morse.replace(/&nbsp/g, " ");
-
-           // All times in seconds
-           var dot_time = 0.050;
-           var dash_time = dot_time * 3;
-           var inter_elem_time = dot_time;
-           var space_time = dot_time * 7;
 
            // schedule the notes for each character in the Morse code string
            var t = Tone.now();
