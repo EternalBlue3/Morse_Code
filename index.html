@@ -80,12 +80,6 @@
                 }
               }
             }
-
-           // stop the oscillator after the last note is played
-           setTimeout(function () {
-             osc.stop();
-           }, time * 1000); // convert time to milliseconds
-         }
      
         function sleep(ms) {
            return new Promise(resolve => setTimeout(resolve, ms));
