@@ -1,101 +1,98 @@
 <!DOCTYPE html>
 <html>
-   <head>
-      <title>Morse Code Translator</title>
-      <script src="/Morse_Code/Tone.min.js"></script>
-   </head>
-   <body>
-      <h1>Morse Code Translator</h1>
-      <input id="inputarea" type="text"><button id="method">Encode</button><button id="translate">Translate</button><button id="playsound">Play Sound</button>
-      <br>
-      <p id="translated"></p>
-      <script>
-         var methodbutton = document.getElementById("method");
-         var translationbutton = document.getElementById("translate");
-         var playsoundbutton = document.getElementById("playsound");
-         var inputarea = document.getElementById("inputarea");
-         var output = document.getElementById("translated");
-         var morsecode = "";
-         
-         methodbutton.addEventListener('click',function() {
-            if (methodbutton.innerHTML == "Encode"){
-               methodbutton.innerHTML = "Decode";
-            } else {
-               methodbutton.innerHTML = "Encode";
-            }
-         });
-         // Morse Code Translation
-         
-         const charToMorse = {'!':"-.-.--",'"':".-..-.",'$':"...-..-",'&':".-...","'":".----.",'(':"-.--.",')':"-.--.-",'+':".-.-.",',':"--..--",'-':"-....-",'.':".-.-.-",'/':"-..-.",'0':"-----",'1':".----",'2':"..---",'3':"...--",'4':"....-",'5':".....",'6':"-....",'7':"--...",'8':"---..",'9':"----.",':':"---...",';':"-.-.-.",'=':"-...-",'?':"..--..",'@':".--.-.",'_':"..--.-",'A':".-",'B':"-...",'C':"-.-.",'D':"-..",'E':".",'F':"..-.",'G':"--.",'H':"....",'I':"..",'J':".---",'K':"-.-",'L':".-..",'M':"--",'N':"-.",'O':"---",'P':".--.",'Q':"--.-",'R':".-.",'S':"...",'T':"-",'U':"..-",'V':"...-",'W':".--",'X':"-..-",'Y':"-.--",'Z':"--.."};
-         const morseToChar = Object.fromEntries(Object.entries(charToMorse).map(([k, v]) => [v, k]));
-         
-         function textToMorse(msg) {
-            const out = [...msg.toUpperCase()].map(x => charToMorse[x] || '');
-            return out.join('&nbsp');
-         }
-         
-         function morseToText(morse) {
-            return morse.split('  ').map(word => {
-               return word.split(' ').map(code => morseToChar[code] || '').join('');
-            }).join(' ');
-         }
-         
-         // All times in seconds
-         var dot_time = 0.050;
-         var dash_time = dot_time * 3;
-         var inter_elem_time = dot_time;
-         var space_time = dot_time * 7;
-         
-         // The Morse Code tone to use, 550Hz sine wave
-         var osc = new Tone.Oscillator({
-           "frequency": 550,
-           "volume": -20 // set initial volume to -20 dB to avoid clipping
-         }).toMaster();
+    <head>
+        <title>Morse Code Translator</title>
+        <link rel="stylesheet" href="styles.css">
+        <script src="http://unpkg.com/tone"></script>
+    </head>
+    <body>
+        <h1>Morse Code Translator</h1>
+        <input id="inputarea" type="text">
+        <button id="method">Encode</button>
+        <button id="translate">Translate</button><button id="playsound">Play Sound</button>
+        <br>
+        <p id="translated"></p>
+        <script>
+            var methodbutton = document.getElementById("method");
+            var translationbutton = document.getElementById("translate");
+            var playsoundbutton = document.getElementById("playsound");
+            var inputarea = document.getElementById("inputarea");
+            var output = document.getElementById("translated");
+            var morsecode = "";
 
-         var tone_dit = function(time, char) {
-           osc.start(time);
-           osc.stop(time + dot_time);
-         }
-         var tone_dah = function(time, char) {
-           osc.start(time);
-           osc.stop(time + dash_time);
-         }
-
-         function playMorseSound(morse) {
-           morse = morse.replace(/&nbsp/g, " ");
-
-           // schedule the notes for each character in the Morse code string
-           var t = Tone.now();
-              for (const x of morse) {
-                if (x !== ' ') {
-                  if (x === '.') {
-                    tone_dit(t, x);
-                    t += dot_time + inter_elem_time;
-                  } else {
-                    tone_dah(t, x);
-                    t += dash_time + inter_elem_time;
-                  }
+            methodbutton.addEventListener('click',function() {
+                if (methodbutton.innerHTML == "Encode"){
+                    methodbutton.innerHTML = "Decode";
                 } else {
-                  t += space_time;
+                    methodbutton.innerHTML = "Encode";
                 }
-              }
+            });
+
+            const charToMorse = {'!':"-.-.--",'"':".-..-.",'$':"...-..-",'&':".-...","'":".----.",'(':"-.--.",')':"-.--.-",'+':".-.-.",',':"--..--",'-':"-....-",'.':".-.-.-",'/':"-..-.",'0':"-----",'1':".----",'2':"..---",'3':"...--",'4':"....-",'5':".....",'6':"-....",'7':"--...",'8':"---..",'9':"----.",':':"---...",';':"-.-.-.",'=':"-...-",'?':"..--..",'@':".--.-.",'_':"..--.-",'A':".-",'B':"-...",'C':"-.-.",'D':"-..",'E':".",'F':"..-.",'G':"--.",'H':"....",'I':"..",'J':".---",'K':"-.-",'L':".-..",'M':"--",'N':"-.",'O':"---",'P':".--.",'Q':"--.-",'R':".-.",'S':"...",'T':"-",'U':"..-",'V':"...-",'W':".--",'X':"-..-",'Y':"-.--",'Z':"--..",' ':"/"};
+            const morseToChar = Object.fromEntries(Object.entries(charToMorse).map(([k, v]) => [v, k]));
+
+            function textToMorse(msg) {
+                return [...msg.toUpperCase()].map(x => charToMorse[x] || '#').join('&nbsp').replace(/\//g,'');
             }
-     
-        function sleep(ms) {
-           return new Promise(resolve => setTimeout(resolve, ms));
-        }
-     
-        translationbutton.addEventListener('click', function() {
-           if (methodbutton.innerHTML == "Encode") {
-              morsecode = textToMorse(inputarea.value);
-              output.innerHTML = morsecode;
-           } else {
-              morsecode = '';
-              output.innerHTML = morseToText(inputarea.value);
-           }
-        });
-     
-        playsoundbutton.addEventListener('click', function() {playMorseSound(morsecode)});
-      </script>
-   </body>
+
+            function morseToText(morse) {
+                return morse.split('  ').map(word => {
+                    return word.split(' ').map(code => morseToChar[code] || '').join('');
+                }).join(' ');
+            }
+
+            // All times in seconds
+            var dot_time = 0.050;
+            var dash_time = dot_time * 3;
+            var inter_elem_time = dot_time;
+            var space_time = dot_time * 3;
+
+            // The Morse Code tone to use, 550Hz sine wave
+            var osc = new Tone.Oscillator({
+                "frequency": 550,
+                "volume": -20 // set initial volume to -20 dB to avoid clipping
+            }).toMaster();
+
+            var tone_dit = function(time) {
+                osc.start(time);
+                osc.stop(time + dot_time);
+            }
+            var tone_dah = function(time) {
+                osc.start(time);
+                osc.stop(time + dash_time);
+            }
+
+            function playMorseSound(morse) {
+                morse = morse.replace(/&nbsp/g, " ");
+
+                // schedule the notes for each character in the Morse code string
+                var t = Tone.now();
+                for (const x of morse) {
+                    if (x !== ' ') {
+                        if (x === '.') {
+                            tone_dit(t);
+                            t += dot_time + inter_elem_time;
+                        } else {
+                            tone_dah(t);
+                            t += dash_time + inter_elem_time;
+                        }
+                    } else {
+                        t += space_time;
+                    }
+                }
+            }
+
+            translationbutton.addEventListener('click', function() {
+                if (methodbutton.innerHTML == "Encode") {
+                    morsecode = textToMorse(inputarea.value);
+                    output.innerHTML = morsecode;
+                } else {
+                    morsecode = '';
+                    output.innerHTML = morseToText(inputarea.value);
+                }
+            });
+
+            playsoundbutton.addEventListener('click', function() {playMorseSound(morsecode)});
+        </script>
+    </body>
 </html>
